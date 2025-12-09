@@ -5,7 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiLogOut, FiUser, FiMenu, FiX, FiSettings, FiBell } from "react-icons/fi";
+import {
+  FiLogOut,
+  FiUser,
+  FiMenu,
+  FiX,
+  FiSettings,
+  FiBell,
+  FiPlus,
+} from "react-icons/fi";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -41,7 +49,7 @@ export default function Navbar() {
   // Navigation items
   const navItems = [
     { name: "Dashboard", href: "/learner/dashboard" },
-    { name: "Courses", href: "/learner/courses" },
+    { name: "Courses", href: "/courses" },
     { name: "Progress", href: "/learner/progress" },
     { name: "Resources", href: "/learner/resources" },
   ];
@@ -72,7 +80,10 @@ export default function Navbar() {
               whileTap={{ scale: 0.95 }}
               className="flex items-center"
             >
-              <Link href="/learner/dashboard" className="flex items-center space-x-2">
+              <Link
+                href="/learner/dashboard"
+                className="flex items-center space-x-2"
+              >
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">LMS</span>
                 </div>
@@ -138,7 +149,9 @@ export default function Navbar() {
                     {/* User Info - Hidden on mobile */}
                     <div className="hidden lg:block text-left">
                       <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                        {user.displayName || user.email?.split("@")[0] || "User"}
+                        {user.displayName ||
+                          user.email?.split("@")[0] ||
+                          "User"}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
                         {user.email}
@@ -147,6 +160,7 @@ export default function Navbar() {
                   </div>
                 </motion.button>
 
+                {/* Dropdown Menu */}
                 {/* Dropdown Menu */}
                 <AnimatePresence>
                   {isDropdownOpen && (
@@ -184,6 +198,19 @@ export default function Navbar() {
                           <FiSettings className="w-5 h-5 mr-3" />
                           <span>Settings</span>
                         </Link>
+
+                        {/* ADD THE "ADD COURSE" LINK HERE */}
+                        {user.userType === "organizer" ||
+                        user.userType === "teacher" ? (
+                          <Link
+                            href="/courses/add"
+                            onClick={() => setIsDropdownOpen(false)}
+                            className="flex items-center px-4 py-3 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                          >
+                            <FiPlus className="w-5 h-5 mr-3" />
+                            <span>Add Course</span>
+                          </Link>
+                        ) : null}
                       </div>
 
                       <div className="border-t border-gray-100 dark:border-gray-700">
